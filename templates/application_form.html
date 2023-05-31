@@ -1,0 +1,57 @@
+<h4>Your review</h4>
+  <div class="row">
+          <div class="col-md-6">
+            <form action="/cafe/{{cafe['id']}}/review" method="post">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label"
+                  >Email address</label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  required name="email"
+                />
+                <div id="emailHelp" class="form-text">
+                  We'll never share your email with anyone else.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputfull_name" class="form-label"
+                  >full name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleInputfull_name"
+                  required name="full_name"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputreview" class="form-label"
+                  >your review</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleInputreview"
+                  name="review"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputrating" class="form-label"
+                  >your rating</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleInputrating"
+                  name="rating"
+                />
+              </div>
+
+  <input type="submit">
+           </form>
+          </div>
+</div>
