@@ -1,6 +1,6 @@
 Flask==1.1.2
 Requests==2.31.0
-SQLAlchemy==1.4.23
+SQLAlchemy==2.0.15
 gunicorn==20.1.0
 Jinja2==2.11.2
 PyMySQL==1.0.3
@@ -10,3 +10,4 @@ mysql-connector==2.2.9
 mysqlclient==2.1.1
 itsdangerous==1.1.0
 Werkzeug==1.0.1
+python-dotenv~=1.0.0
