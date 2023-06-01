@@ -1,30 +1,37 @@
-from sqlalchemy import create_engine,text
+from dotenv import load_dotenv
+load_dotenv()
 import os
-conect_string=os.environ["CONECTSTR"]
+import pymysql
+import ssl
+connection = pymysql.connect(
+  host= os.getenv("HOST"),
+  user=os.getenv("USERNAME"),
+  passwd= os.getenv("PASSWORD"),
+  database= os.getenv("DATABASE"),
+ssl={'ssl': {'ca': os.environ.get('MYSQL_ATTR_SSL_CA')}}
+)
+def to_dict(query):
+  cursor = connection.cursor()
+  cursor.execute(query)
+  rows = cursor.fetchall()
+  cursor.close()
+  result = []
+  columns = [column[0] for column in cursor.description]  # Get the column names
+  for row in rows:
+    row_dict = dict(zip(columns, row))
+    result.append(row_dict)
+  return result
 
-engine=create_engine(conect_string,connect_args={
-  "ssl": {
-    "ssl_ca": "/etc/ssl/cert.pem"
-  }})
 
 def load_cafes_from_db():
-  row_as_dict = []
-  with engine.connect() as conn:
-    result = conn.execute(text("select * from cafes"))
-    rows = result.fetchall()
-    for row in rows:
-      row_as_dict.append(dict(row))
-    return row_as_dict
+  query='SELECT * FROM cafes'
+  return to_dict(query)
 def load_cafe_from_db(id):
-  with engine.connect() as conn:
-    result=conn.execute(text("select * from cafes where id = :id"),id=id)
-    return result.fetchall()
-def add_cafe_to_db(data):
-  with engine.connect() as conn:
-    result=conn.execute(text("INSERT  INTO cafes(id,name,map_url,img_url,location,has_sockets,has_toilet,can_take_calls,seats,coffee_price) values(:id,:name,:map_url,:img_url,:location,:has_sockets,:has_toilet,:can_take_calls,L:seats,:coffe_price)"),id=id,name=data["name"],map_url=data["map_url"],img_url=data["img_url"],location=data["location"],has_sockets=data["has_sockets"],has_toilet=data["has_toilet"],can_take_calls=data["can_take_calls"],seats=data["seats"],coffe_price=data["coffee_price"])
-
+  query=f"select * from cafes where id = {id}"
+  return to_dict(query)
+def add_cafe_to_db(id,data):
+  query=f"INSERT  INTO cafes(id,name,map_url,img_url,location,has_sockets,has_toilet,can_take_calls,seats,coffee_price) values({id},{data['name']},{data['map_url']},{data['img_url']},{data['location']},{data['has_sockets']},{data['has_toilet']},{data['can_take_calls']},{data['seats']},{data['coffee_price']})"
+  return to_dict(query)
 def add_review_for_cafe_to_db(id,data):
-  with engine.connect() as conn:
-    result=conn.execute(text("INSERT INTO review (id,name,email,review,rating) VALUES (:id,:name,:email,:review,:rating)"),id=id,name=data["full_name"],email=data["email"],review=data["review"],rating=data['rating'])
-result=load_cafes_from_db()
-print(result)
+  query=f"INSERT INTO review (id,name,email,review,rating) VALUES ({id},{data['full_name']},{data['email']},{data['review']},{data['rating']})"
+  return to_dict(query)
